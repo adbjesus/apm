@@ -1,0 +1,167 @@
+#+TITLE: apm::tapm benchmark
+
+* Setup
+
+We start by compiling the =tapm_benchmark= target in release mode. We
+will first remove any build directory to make sure no artifacts exist.
+
+#+begin_src sh :results output :exports both :cache yes
+rm -rf tmp/build/release
+meson setup tmp/build/release .. -Dbuildtype=release
+meson compile -C tmp/build/release apm_benchmark
+#+end_src
+
+#+RESULTS[255d897b684cf25e19e662649a1e5f0bcb82e42a]:
+#+begin_example
+The Meson build system
+Version: 0.60.1
+Source dir: /home/adbjesus/Workspace/Research/code/apm
+Build dir: /home/adbjesus/Workspace/Research/code/apm/notebooks/tmp/build/release
+Build type: native build
+Project name: apm
+Project version: 0.1
+C++ compiler for the host machine: c++ (gcc 11.1.0 "c++ (GCC) 11.1.0")
+C++ linker for the host machine: c++ ld.bfd 2.36.1
+Host machine cpu family: x86_64
+Host machine cpu: x86_64
+Found pkg-config: /usr/bin/pkg-config (1.8.0)
+Run-time dependency benchmark found: YES 1.6.0
+Build targets in project: 2
+
+apm 0.1
+
+  User defined options
+    buildtype: release
+
+Found ninja-1.10.2 at /usr/bin/ninja
+ninja: Entering directory `/home/adbjesus/Workspace/Research/code/apm/notebooks/tmp/build/release'
+[1/2] Compiling C++ object apm_benchmark.p/bench_apm_benchmark.cpp.o
+[2/2] Linking target apm_benchmark
+#+end_example
+
+* Run benchmark
+
+All looks good, so we move on to running the benchmark. Since we want
+our output in csv for later processing we use the
+=--benchmark_format=csv= flag.
+
+#+name: bench_csv
+#+begin_src sh :results output :exports both :cache yes
+./tmp/build/release/apm_benchmark --benchmark_format=csv --benchmark_min_time="2"
+#+end_src
+
+#+RESULTS[829c3dadc365513a9ef0dd658b386a92af93c787]: bench_csv
+#+begin_example
+name,iterations,real_time,cpu_time,time_unit,bytes_per_second,items_per_second,label,error_occurred,error_message
+"BM_tapm/10/10/4",483282,5790.29,5788.31,ns,,,,,
+"BM_tapm/100/10/4",88343,31954.2,31941.2,ns,,,,,
+"BM_tapm/1000/10/4",8891,320161,319963,ns,,,,,
+"BM_tapm/10000/10/4",797,3.52602e+06,3.52452e+06,ns,,,,,
+"BM_tapm/100000/10/4",55,5.2322e+07,5.22639e+07,ns,,,,,
+"BM_tapm/10/100/4",167558,16701.7,16695.9,ns,,,,,
+"BM_tapm/100/100/4",52224,53984.8,53960.4,ns,,,,,
+"BM_tapm/1000/100/4",8285,338766,338617,ns,,,,,
+"BM_tapm/10000/100/4",786,3.55999e+06,3.55852e+06,ns,,,,,
+"BM_tapm/100000/100/4",58,4.79783e+07,4.79265e+07,ns,,,,,
+"BM_tapm/10/1000/4",20944,139172,139098,ns,,,,,
+"BM_tapm/100/1000/4",12582,222686,222596,ns,,,,,
+"BM_tapm/1000/1000/4",4352,640936,640645,ns,,,,,
+"BM_tapm/10000/1000/4",703,3.99058e+06,3.9887e+06,ns,,,,,
+"BM_tapm/100000/1000/4",60,4.75847e+07,4.75284e+07,ns,,,,,
+"BM_tapm/10/10/1",785782,3502.9,3501.64,ns,,,,,
+"BM_tapm/100/10/1",96764,29370.5,29357.9,ns,,,,,
+"BM_tapm/1000/10/1",8859,315459,315329,ns,,,,,
+"BM_tapm/10000/10/1",778,3.60364e+06,3.60209e+06,ns,,,,,
+"BM_tapm/100000/10/1",56,5.02507e+07,5.01937e+07,ns,,,,,
+"BM_tapm/10/100/1",196738,14251.9,14246.3,ns,,,,,
+"BM_tapm/100/100/1",53829,52041.6,52019.2,ns,,,,,
+"BM_tapm/1000/100/1",8379,336346,336201,ns,,,,,
+"BM_tapm/10000/100/1",784,3.58327e+06,3.58152e+06,ns,,,,,
+"BM_tapm/100000/100/1",57,4.87374e+07,4.86871e+07,ns,,,,,
+"BM_tapm/10/1000/1",26133,106869,106830,ns,,,,,
+"BM_tapm/100/1000/1",14206,197061,196974,ns,,,,,
+"BM_tapm/1000/1000/1",4360,645298,644986,ns,,,,,
+"BM_tapm/10000/1000/1",711,3.94531e+06,3.94357e+06,ns,,,,,
+"BM_tapm/100000/1000/1",60,4.65744e+07,4.65263e+07,ns,,,,,
+"BM_tapm_greedy/10/10/4",827007,3405.37,3403.94,ns,,,,,
+"BM_tapm_greedy/100/10/4",100066,28952.6,28934.7,ns,,,,,
+"BM_tapm_greedy/1000/10/4",10045,276272,276146,ns,,,,,
+"BM_tapm_greedy/10000/10/4",879,3.19356e+06,3.19207e+06,ns,,,,,
+"BM_tapm_greedy/100000/10/4",66,4.23806e+07,4.23366e+07,ns,,,,,
+"BM_tapm_greedy/10/100/4",180649,15481.2,15475.2,ns,,,,,
+"BM_tapm_greedy/100/100/4",55437,50791.8,50768.4,ns,,,,,
+"BM_tapm_greedy/1000/100/4",8931,315105,314977,ns,,,,,
+"BM_tapm_greedy/10000/100/4",891,3.19327e+06,3.19188e+06,ns,,,,,
+"BM_tapm_greedy/100000/100/4",67,4.20254e+07,4.1982e+07,ns,,,,,
+"BM_tapm_greedy/10/1000/4",23873,115978,115938,ns,,,,,
+"BM_tapm_greedy/100/1000/4",13200,211323,211241,ns,,,,,
+"BM_tapm_greedy/1000/1000/4",4622,607276,607014,ns,,,,,
+"BM_tapm_greedy/10000/1000/4",769,3.67359e+06,3.67204e+06,ns,,,,,
+"BM_tapm_greedy/100000/1000/4",68,4.11246e+07,4.10813e+07,ns,,,,,
+"BM_tapm_greedy/10/10/1",853059,3232.64,3231.46,ns,,,,,
+"BM_tapm_greedy/100/10/1",107207,26432.7,26417.8,ns,,,,,
+"BM_tapm_greedy/1000/10/1",10062,278325,278212,ns,,,,,
+"BM_tapm_greedy/10000/10/1",861,3.25661e+06,3.25513e+06,ns,,,,,
+"BM_tapm_greedy/100000/10/1",64,4.36219e+07,4.35739e+07,ns,,,,,
+"BM_tapm_greedy/10/100/1",191251,14599,14593.7,ns,,,,,
+"BM_tapm_greedy/100/100/1",55976,50142.2,50119.8,ns,,,,,
+"BM_tapm_greedy/1000/100/1",9176,305158,305029,ns,,,,,
+"BM_tapm_greedy/10000/100/1",888,3.19046e+06,3.18907e+06,ns,,,,,
+"BM_tapm_greedy/100000/100/1",66,4.23372e+07,4.22936e+07,ns,,,,,
+"BM_tapm_greedy/10/1000/1",25015,112039,111998,ns,,,,,
+"BM_tapm_greedy/100/1000/1",13530,207742,207660,ns,,,,,
+"BM_tapm_greedy/1000/1000/1",4386,638746,638450,ns,,,,,
+"BM_tapm_greedy/10000/1000/1",770,3.6597e+06,3.65809e+06,ns,,,,,
+"BM_tapm_greedy/100000/1000/1",68,4.12384e+07,4.11953e+07,ns,,,,,
+#+end_example
+
+* Plotting results
+First we put the results into =R=
+
+#+begin_src R :exports both :results output :var datastr=bench_csv :session *R*
+library(dplyr, warn.conflicts = FALSE)
+library(tidyr)
+dat <- read.csv(text = datastr) %>%
+  select(name, cpu_time) %>%
+  separate(name, c("method", "n", "l", "d"), "/") %>%
+  mutate(n = as.numeric(n)) %>%
+  mutate(cpu_time = cpu_time * 1e-9) %>%
+  mutate_if(is.character, as.factor) %>%
+  mutate(d = recode_factor(d, "4"="0.5", "1"="2")) %>%
+  mutate(method = recode(method, BM_tapm="Exact", BM_tapm_greedy="Greedy"))
+summary(dat)
+#+end_src
+
+#+RESULTS:
+: R> R> R> + + + + + + + R>     method         n             l        d         cpu_time
+:  Exact :30   Min.   :    10   10  :20   0.5:30   Min.   :3.230e-06
+:  Greedy:30   1st Qu.:   100   100 :20   2  :30   1st Qu.:5.348e-05
+:              Median :  1000   1000:20            Median :3.281e-04
+:              Mean   : 22222                      Mean   :9.911e-03
+:              3rd Qu.: 10000                      3rd Qu.:3.662e-03
+:              Max.   :100000                      Max.   :5.226e-02
+
+Great! Now, we plot the data
+
+#+begin_src R :exports both :results output file graphics :file tmp/res.pdf :session *R* :width 9 :height 3.5
+library(ggplot2)
+ggplot(dat, aes(n, cpu_time,
+                colour = method,
+                shape = method,
+                linetype = l,
+                group = interaction(method, l))) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(vars(d), labeller = "label_both") +
+  scale_y_log10() +
+  scale_x_log10() +
+  theme_bw() +
+  ylab("Time (s)") +
+  xlab("Number of iterations") +
+  scale_colour_grey(name = "Method") +
+  scale_shape_discrete(name = "Method") +
+  scale_linetype_discrete(name = "Linear segments")
+#+end_src
+
+#+RESULTS:
+[[file:tmp/res.pdf]]
