@@ -1,2 +1,9 @@
-/build/
-/.ccls-cache/
+# Meson build directory
+/build
+
+# Nix flake build directory
+/result
+
+# Envrc
+.envrc
+.direnv

@@ -21,6 +21,6 @@ executable('apm', 'apps/apm.cpp', dependencies: [apm_dep], install: true)
 
 ## Benchmark
 
-bench_deps = [dependency('benchmark'), apm_dep]
+bench_deps = [dependency('benchmark'), dependency('threads'), apm_dep]
 bench_srcs = ['bench/apm_benchmark.cpp']
 benchmark('apm', executable('apm_benchmark', bench_srcs, dependencies: bench_deps))
