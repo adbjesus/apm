@@ -1,23 +1,39 @@
 #include <benchmark/benchmark.h>
 
-#include <apm/apm.hpp>
-#include <iostream>
+#include <apm/theoretical_model.hpp>
 
-static void BM_tapm(benchmark::State& state) {
+#include <iterator>
+#include <ranges>
+#include <vector>
+
+static void BM_greedy_model(benchmark::State& state) {
+  int n = state.range(0);
+  int l = state.range(1);
+  double d = 2.0 / static_cast<double>(state.range(2));
+  auto r = apm::point<double>{0.0, 0.0};
+  auto segments = apm::piecewise_segments(l, d);
   for (auto _ : state) {
-    benchmark::DoNotOptimize(apm::tapm<double>(state.range(0), state.range(1), 2.0 / double(state.range(2)), 0, 0));
+    auto model = apm::greedy_model(segments, r);
+    for (auto [_, hv] : model | std::ranges::views::take(n)) {
+      benchmark::DoNotOptimize(hv);
+    }
   }
 }
-// Register the function as a benchmark
-BENCHMARK(BM_tapm)->ArgsProduct({{10, 100, 1000, 10000, 100000}, {10, 100, 1000}, {4, 1}});
+BENCHMARK(BM_greedy_model)->ArgsProduct({{10, 100, 1000, 10000, 100000}, {10, 100, 1000}, {4, 1}});
 
-// Define another benchmark
-static void BM_tapm_greedy(benchmark::State& state) {
+static void BM_exact_model(benchmark::State& state) {
+  int n = state.range(0);
+  int l = state.range(1);
+  double d = 2.0 / static_cast<double>(state.range(2));
+  auto r = apm::point<double>{0.0, 0.0};
+  auto segments = apm::piecewise_segments(l, d);
   for (auto _ : state) {
-    benchmark::DoNotOptimize(
-        apm::tapm_greedy<double>(state.range(0), state.range(1), 2.0 / double(state.range(2)), 0, 0));
+    auto model = apm::exact_model(segments, r);
+    for (auto hv : model | std::ranges::views::take(n)) {
+      benchmark::DoNotOptimize(hv);
+    }
   }
 }
-BENCHMARK(BM_tapm_greedy)->ArgsProduct({{10, 100, 1000, 10000, 100000}, {10, 100, 1000}, {4, 1}});
+BENCHMARK(BM_exact_model)->ArgsProduct({{10, 100, 1000, 10000, 100000}, {10, 100, 1000}, {4, 1}});
 
 BENCHMARK_MAIN();

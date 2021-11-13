@@ -1,4 +1,4 @@
-#+TITLE: apm::tapm benchmark
+#+TITLE: apm::apm benchmark
 
 * Setup
 
@@ -7,11 +7,11 @@ will first remove any build directory to make sure no artifacts exist.
 
 #+begin_src sh :results output :exports both :cache yes
 rm -rf tmp/build/release
-meson setup tmp/build/release .. -Dbuildtype=release
+meson setup --buildtype=release tmp/build/release ..
 meson compile -C tmp/build/release apm_benchmark
 #+end_src
 
-#+RESULTS[255d897b684cf25e19e662649a1e5f0bcb82e42a]:
+#+RESULTS[2b8fbe894100a2656936a3a97055dbce23d75102]:
 #+begin_example
 The Meson build system
 Version: 0.60.1
@@ -26,6 +26,7 @@ Host machine cpu family: x86_64
 Host machine cpu: x86_64
 Found pkg-config: /usr/bin/pkg-config (1.8.0)
 Run-time dependency benchmark found: YES 1.6.0
+Run-time dependency threads found: YES
 Build targets in project: 2
 
 apm 0.1
@@ -47,72 +48,72 @@ our output in csv for later processing we use the
 
 #+name: bench_csv
 #+begin_src sh :results output :exports both :cache yes
-./tmp/build/release/apm_benchmark --benchmark_format=csv --benchmark_min_time="2"
+./tmp/build/release/apm_benchmark --benchmark_format=csv
 #+end_src
 
-#+RESULTS[829c3dadc365513a9ef0dd658b386a92af93c787]: bench_csv
+#+RESULTS[9ee258f2a64ce6787a423c612c0306ff173d2c7a]: bench_csv
 #+begin_example
 name,iterations,real_time,cpu_time,time_unit,bytes_per_second,items_per_second,label,error_occurred,error_message
-"BM_tapm/10/10/4",483282,5790.29,5788.31,ns,,,,,
-"BM_tapm/100/10/4",88343,31954.2,31941.2,ns,,,,,
-"BM_tapm/1000/10/4",8891,320161,319963,ns,,,,,
-"BM_tapm/10000/10/4",797,3.52602e+06,3.52452e+06,ns,,,,,
-"BM_tapm/100000/10/4",55,5.2322e+07,5.22639e+07,ns,,,,,
-"BM_tapm/10/100/4",167558,16701.7,16695.9,ns,,,,,
-"BM_tapm/100/100/4",52224,53984.8,53960.4,ns,,,,,
-"BM_tapm/1000/100/4",8285,338766,338617,ns,,,,,
-"BM_tapm/10000/100/4",786,3.55999e+06,3.55852e+06,ns,,,,,
-"BM_tapm/100000/100/4",58,4.79783e+07,4.79265e+07,ns,,,,,
-"BM_tapm/10/1000/4",20944,139172,139098,ns,,,,,
-"BM_tapm/100/1000/4",12582,222686,222596,ns,,,,,
-"BM_tapm/1000/1000/4",4352,640936,640645,ns,,,,,
-"BM_tapm/10000/1000/4",703,3.99058e+06,3.9887e+06,ns,,,,,
-"BM_tapm/100000/1000/4",60,4.75847e+07,4.75284e+07,ns,,,,,
-"BM_tapm/10/10/1",785782,3502.9,3501.64,ns,,,,,
-"BM_tapm/100/10/1",96764,29370.5,29357.9,ns,,,,,
-"BM_tapm/1000/10/1",8859,315459,315329,ns,,,,,
-"BM_tapm/10000/10/1",778,3.60364e+06,3.60209e+06,ns,,,,,
-"BM_tapm/100000/10/1",56,5.02507e+07,5.01937e+07,ns,,,,,
-"BM_tapm/10/100/1",196738,14251.9,14246.3,ns,,,,,
-"BM_tapm/100/100/1",53829,52041.6,52019.2,ns,,,,,
-"BM_tapm/1000/100/1",8379,336346,336201,ns,,,,,
-"BM_tapm/10000/100/1",784,3.58327e+06,3.58152e+06,ns,,,,,
-"BM_tapm/100000/100/1",57,4.87374e+07,4.86871e+07,ns,,,,,
-"BM_tapm/10/1000/1",26133,106869,106830,ns,,,,,
-"BM_tapm/100/1000/1",14206,197061,196974,ns,,,,,
-"BM_tapm/1000/1000/1",4360,645298,644986,ns,,,,,
-"BM_tapm/10000/1000/1",711,3.94531e+06,3.94357e+06,ns,,,,,
-"BM_tapm/100000/1000/1",60,4.65744e+07,4.65263e+07,ns,,,,,
-"BM_tapm_greedy/10/10/4",827007,3405.37,3403.94,ns,,,,,
-"BM_tapm_greedy/100/10/4",100066,28952.6,28934.7,ns,,,,,
-"BM_tapm_greedy/1000/10/4",10045,276272,276146,ns,,,,,
-"BM_tapm_greedy/10000/10/4",879,3.19356e+06,3.19207e+06,ns,,,,,
-"BM_tapm_greedy/100000/10/4",66,4.23806e+07,4.23366e+07,ns,,,,,
-"BM_tapm_greedy/10/100/4",180649,15481.2,15475.2,ns,,,,,
-"BM_tapm_greedy/100/100/4",55437,50791.8,50768.4,ns,,,,,
-"BM_tapm_greedy/1000/100/4",8931,315105,314977,ns,,,,,
-"BM_tapm_greedy/10000/100/4",891,3.19327e+06,3.19188e+06,ns,,,,,
-"BM_tapm_greedy/100000/100/4",67,4.20254e+07,4.1982e+07,ns,,,,,
-"BM_tapm_greedy/10/1000/4",23873,115978,115938,ns,,,,,
-"BM_tapm_greedy/100/1000/4",13200,211323,211241,ns,,,,,
-"BM_tapm_greedy/1000/1000/4",4622,607276,607014,ns,,,,,
-"BM_tapm_greedy/10000/1000/4",769,3.67359e+06,3.67204e+06,ns,,,,,
-"BM_tapm_greedy/100000/1000/4",68,4.11246e+07,4.10813e+07,ns,,,,,
-"BM_tapm_greedy/10/10/1",853059,3232.64,3231.46,ns,,,,,
-"BM_tapm_greedy/100/10/1",107207,26432.7,26417.8,ns,,,,,
-"BM_tapm_greedy/1000/10/1",10062,278325,278212,ns,,,,,
-"BM_tapm_greedy/10000/10/1",861,3.25661e+06,3.25513e+06,ns,,,,,
-"BM_tapm_greedy/100000/10/1",64,4.36219e+07,4.35739e+07,ns,,,,,
-"BM_tapm_greedy/10/100/1",191251,14599,14593.7,ns,,,,,
-"BM_tapm_greedy/100/100/1",55976,50142.2,50119.8,ns,,,,,
-"BM_tapm_greedy/1000/100/1",9176,305158,305029,ns,,,,,
-"BM_tapm_greedy/10000/100/1",888,3.19046e+06,3.18907e+06,ns,,,,,
-"BM_tapm_greedy/100000/100/1",66,4.23372e+07,4.22936e+07,ns,,,,,
-"BM_tapm_greedy/10/1000/1",25015,112039,111998,ns,,,,,
-"BM_tapm_greedy/100/1000/1",13530,207742,207660,ns,,,,,
-"BM_tapm_greedy/1000/1000/1",4386,638746,638450,ns,,,,,
-"BM_tapm_greedy/10000/1000/1",770,3.6597e+06,3.65809e+06,ns,,,,,
-"BM_tapm_greedy/100000/1000/1",68,4.12384e+07,4.11953e+07,ns,,,,,
+"BM_greedy_model/10/10/4",383555,1839.76,1836.75,ns,,,,,
+"BM_greedy_model/100/10/4",36168,19177.2,19138.5,ns,,,,,
+"BM_greedy_model/1000/10/4",3503,200429,199991,ns,,,,,
+"BM_greedy_model/10000/10/4",309,2.27588e+06,2.27188e+06,ns,,,,,
+"BM_greedy_model/100000/10/4",23,3.02019e+07,3.01398e+07,ns,,,,,
+"BM_greedy_model/10/100/4",123670,5737.19,5726.83,ns,,,,,
+"BM_greedy_model/100/100/4",24542,28669.8,28654.1,ns,,,,,
+"BM_greedy_model/1000/100/4",3285,215017,214909,ns,,,,,
+"BM_greedy_model/10000/100/4",317,2.2342e+06,2.23295e+06,ns,,,,,
+"BM_greedy_model/100000/100/4",24,2.93265e+07,2.92922e+07,ns,,,,,
+"BM_greedy_model/10/1000/4",17592,39496.7,39475.8,ns,,,,,
+"BM_greedy_model/100/1000/4",7919,89440.3,89393.7,ns,,,,,
+"BM_greedy_model/1000/1000/4",1988,353837,353626,ns,,,,,
+"BM_greedy_model/10000/1000/4",279,2.51532e+06,2.51375e+06,ns,,,,,
+"BM_greedy_model/100000/1000/4",25,2.85e+07,2.84624e+07,ns,,,,,
+"BM_greedy_model/10/10/1",387634,1812.98,1812.06,ns,,,,,
+"BM_greedy_model/100/10/1",34943,20254.4,20243.1,ns,,,,,
+"BM_greedy_model/1000/10/1",3386,206359,206243,ns,,,,,
+"BM_greedy_model/10000/10/1",299,2.32875e+06,2.32726e+06,ns,,,,,
+"BM_greedy_model/100000/10/1",22,3.10298e+07,3.09919e+07,ns,,,,,
+"BM_greedy_model/10/100/1",133242,5288.93,5285.8,ns,,,,,
+"BM_greedy_model/100/100/1",25077,27698.3,27639.9,ns,,,,,
+"BM_greedy_model/1000/100/1",3165,221331,220843,ns,,,,,
+"BM_greedy_model/10000/100/1",313,2.2524e+06,2.25093e+06,ns,,,,,
+"BM_greedy_model/100000/100/1",24,2.99498e+07,2.99121e+07,ns,,,,,
+"BM_greedy_model/10/1000/1",19171,36561.8,36542.9,ns,,,,,
+"BM_greedy_model/100/1000/1",7716,93126.4,93057.3,ns,,,,,
+"BM_greedy_model/1000/1000/1",1894,371867,371635,ns,,,,,
+"BM_greedy_model/10000/1000/1",277,2.5053e+06,2.50368e+06,ns,,,,,
+"BM_greedy_model/100000/1000/1",25,2.8779e+07,2.87429e+07,ns,,,,,
+"BM_exact_model/10/10/4",258473,2729.84,2728.26,ns,,,,,
+"BM_exact_model/100/10/4",26361,26688.7,26660.4,ns,,,,,
+"BM_exact_model/1000/10/4",2650,266614,266043,ns,,,,,
+"BM_exact_model/10000/10/4",242,2.9197e+06,2.91461e+06,ns,,,,,
+"BM_exact_model/100000/10/4",18,3.80701e+07,3.79573e+07,ns,,,,,
+"BM_exact_model/10/100/4",85372,8351.64,8334.14,ns,,,,,
+"BM_exact_model/100/100/4",18911,37194.5,37118.3,ns,,,,,
+"BM_exact_model/1000/100/4",2466,285306,284699,ns,,,,,
+"BM_exact_model/10000/100/4",243,2.8981e+06,2.8929e+06,ns,,,,,
+"BM_exact_model/100000/100/4",18,3.75011e+07,3.73872e+07,ns,,,,,
+"BM_exact_model/10/1000/4",13041,53716.8,53602.5,ns,,,,,
+"BM_exact_model/100/1000/4",6310,114386,114140,ns,,,,,
+"BM_exact_model/1000/1000/4",1509,459299,457812,ns,,,,,
+"BM_exact_model/10000/1000/4",216,3.20895e+06,3.20691e+06,ns,,,,,
+"BM_exact_model/100000/1000/4",19,3.68225e+07,3.67776e+07,ns,,,,,
+"BM_exact_model/10/10/1",272122,2553.99,2552.64,ns,,,,,
+"BM_exact_model/100/10/1",26766,26051.7,26036.4,ns,,,,,
+"BM_exact_model/1000/10/1",2584,265891,265735,ns,,,,,
+"BM_exact_model/10000/10/1",233,2.97191e+06,2.97008e+06,ns,,,,,
+"BM_exact_model/100000/10/1",18,3.9557e+07,3.95057e+07,ns,,,,,
+"BM_exact_model/10/100/1",106928,6479.84,6476.08,ns,,,,,
+"BM_exact_model/100/100/1",20068,34748.1,34726.4,ns,,,,,
+"BM_exact_model/1000/100/1",2450,286752,286574,ns,,,,,
+"BM_exact_model/10000/100/1",235,2.95353e+06,2.95146e+06,ns,,,,,
+"BM_exact_model/100000/100/1",18,3.82656e+07,3.82153e+07,ns,,,,,
+"BM_exact_model/10/1000/1",16931,40948.6,40922.3,ns,,,,,
+"BM_exact_model/100/1000/1",6711,103611,103547,ns,,,,,
+"BM_exact_model/1000/1000/1",1565,446322,446022,ns,,,,,
+"BM_exact_model/10000/1000/1",221,3.19696e+06,3.19449e+06,ns,,,,,
+"BM_exact_model/100000/1000/1",19,3.6526e+07,3.6483e+07,ns,,,,,
 #+end_example
 
 * Plotting results
@@ -128,18 +129,18 @@ dat <- read.csv(text = datastr) %>%
   mutate(cpu_time = cpu_time * 1e-9) %>%
   mutate_if(is.character, as.factor) %>%
   mutate(d = recode_factor(d, "4"="0.5", "1"="2")) %>%
-  mutate(method = recode(method, BM_tapm="Exact", BM_tapm_greedy="Greedy"))
+  mutate(method = recode(method, BM_exact_model="Exact", BM_greedy_model="Greedy"))
 summary(dat)
 #+end_src
 
 #+RESULTS:
-: R> R> R> + + + + + + + R>     method         n             l        d         cpu_time
-:  Exact :30   Min.   :    10   10  :20   0.5:30   Min.   :3.230e-06
-:  Greedy:30   1st Qu.:   100   100 :20   2  :30   1st Qu.:5.348e-05
-:              Median :  1000   1000:20            Median :3.281e-04
-:              Mean   : 22222                      Mean   :9.911e-03
-:              3rd Qu.: 10000                      3rd Qu.:3.662e-03
-:              Max.   :100000                      Max.   :5.226e-02
+: R> R> R> + . + R>     method         n             l        d         cpu_time
+:  Exact :30   Min.   :    10   10  :20   0.5:30   Min.   :1.810e-06
+:  Greedy:30   1st Qu.:   100   100 :20   2  :30   1st Qu.:3.609e-05
+:              Median :  1000   1000:20            Median :2.754e-04
+:              Mean   : 22222                      Mean   :7.342e-03
+:              3rd Qu.: 10000                      3rd Qu.:2.956e-03
+:              Max.   :100000                      Max.   :3.951e-02
 
 Great! Now, we plot the data
 

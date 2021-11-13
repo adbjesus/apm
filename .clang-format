@@ -1,5 +1,5 @@
 BasedOnStyle: Google
-ColumnLimit: 120
+ColumnLimit: 200
 AllowAllConstructorInitializersOnNextLine: false
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: false
@@ -9,3 +9,13 @@ AllowShortLambdasOnASingleLine: Inline
 AllowShortLoopsOnASingleLine: false
 BreakConstructorInitializers: BeforeComma
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:           '^(<catch2/|<benchmark/)'
+    Priority:        1
+  - Regex:           '^(<apm/|")'
+    Priority:        2
+  - Regex:           '<[[:alnum:]_]+>'
+    Priority:        4
+  - Regex:           '.*'
+    Priority:        3
