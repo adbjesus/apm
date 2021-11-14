@@ -15,9 +15,9 @@
           version = "0.1.0";
           src = self;
           # Build dependencies
-          nativeBuildInputs = with pkgs; [ meson ninja pkg-config ];
+          nativeBuildInputs = with pkgs; [ cmake ninja doxygen ];
           # Run-time dependencies
-          buildInputs = with pkgs; [ glpk gbenchmark ];
+          buildInputs = with pkgs; [ gbenchmark catch2 ];
         };
         defaultPackage = self.packages.${system}.apm;
       });

@@ -5,6 +5,7 @@
 #include <array>
 #include <cassert>
 #include <cmath>
+#include <iostream>
 #include <numbers>
 #include <optional>
 #include <queue>
@@ -17,9 +18,9 @@ struct point {
   double x;
   double y;
 
-  constexpr point(double x, double y)
-      : x(x)
-      , y(y) {}
+  constexpr point(double _x, double _y)
+      : x(_x)
+      , y(_y) {}
 
   /**
    * Returns the hypervolume of this point w.r.t. a reference point `r`.
@@ -33,11 +34,11 @@ struct point {
  * Returns whether two doubles are approximately equal.
  *
  * This uses the formula |a - b| <= atol + rtol * |b| taken from
- * numpy.isclose,
- * https://numpy.org/doc/stable/reference/generated/numpy.isclose.html
+ * python's math.isclose:
+ * https://docs.python.org/dev/library/math.html#math.isclose
  */
 [[nodiscard]] constexpr auto is_close(double const &a, double const &b, double rtol = 1e-8, double atol = 1e-30) -> bool {
-  return std::abs(a - b) <= atol + rtol * std::abs(b);
+  return std::abs(a - b) <= std::max(rtol * std::max(std::abs(a), std::abs(b)), atol);
 }
 
 [[nodiscard]] constexpr auto is_point_close(point const &a, point const &b, double rtol = 1e-8, double atol = 1e-30) -> bool {
@@ -48,9 +49,9 @@ struct segment {
   point a;
   point b;
 
-  constexpr segment(point a, point b)
-      : a(a)
-      , b(b) {
+  constexpr segment(point _a, point _b)
+      : a(_a)
+      , b(_b) {
     assert(a.x < b.x);
     assert(a.y > b.y);
   }
