@@ -1,4 +1,4 @@
-#include <apm/theoretical_model.hpp>
+#include <apm/apm.hpp>
 
 #include <array>
 #include <iostream>
@@ -35,7 +35,6 @@ int main(int argc, char **argv) {
     for (auto [_, hv] : model | std::ranges::views::take(n)) {
       result.emplace_back(hv);
     }
-    // apm::greedy_model(std::back_inserter(hvs), n, l, d, rx, ry);
   }
 
   for (auto const &hv : result) {

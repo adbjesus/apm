@@ -1,16 +1,14 @@
 #include <benchmark/benchmark.h>
 
-#include <apm/theoretical_model.hpp>
+#include <apm/apm.hpp>
 
-#include <iterator>
 #include <ranges>
-#include <vector>
 
 static void BM_greedy_model(benchmark::State& state) {
   int n = state.range(0);
   int l = state.range(1);
   double d = 2.0 / static_cast<double>(state.range(2));
-  auto r = apm::point<double>{0.0, 0.0};
+  auto r = apm::point{0.0, 0.0};
   auto segments = apm::piecewise_segments(l, d);
   for (auto _ : state) {
     auto model = apm::greedy_model(segments, r);
@@ -25,7 +23,7 @@ static void BM_exact_model(benchmark::State& state) {
   int n = state.range(0);
   int l = state.range(1);
   double d = 2.0 / static_cast<double>(state.range(2));
-  auto r = apm::point<double>{0.0, 0.0};
+  auto r = apm::point{0.0, 0.0};
   auto segments = apm::piecewise_segments(l, d);
   for (auto _ : state) {
     auto model = apm::exact_model(segments, r);
