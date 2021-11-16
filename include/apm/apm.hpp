@@ -292,6 +292,14 @@ class exact_model : public std::ranges::view_interface<exact_model> {
     m_pqs.back().emplace(std::forward<Segments>(segments), r);
   }
 
+  [[nodiscard]] auto begin() {
+    return iterator(*this);
+  }
+
+  [[nodiscard]] constexpr auto end() {
+    return sentinel{};
+  }
+
   class sentinel {};
 
   class iterator {
@@ -311,7 +319,7 @@ class exact_model : public std::ranges::view_interface<exact_model> {
         , value(parent->m_pqs.front().top().max_hv()) {}
 
     constexpr auto operator==(sentinel const &) const -> bool {
-      return parent == NULL || parent->m_pqs.empty();
+      return parent == nullptr || parent->m_pqs.empty();
     }
 
     constexpr auto operator*() const -> value_type {
@@ -359,7 +367,6 @@ class exact_model : public std::ranges::view_interface<exact_model> {
         }
       }
       parent->m_pqs = std::move(pqs2);
-      // std::cerr << parent->m_pqs.size() << "\n";
       value = std::ranges::max(std::ranges::views::transform(parent->m_pqs, [](auto const &q) { return q.top().max_hv(); }));
       return *this;
     }
@@ -368,14 +375,6 @@ class exact_model : public std::ranges::view_interface<exact_model> {
       return ++(*this);
     }
   };
-
-  [[nodiscard]] auto begin() {
-    return iterator(*this);
-  }
-
-  [[nodiscard]] constexpr auto end() {
-    return sentinel{};
-  }
 };
 
 class greedy_region {
@@ -467,6 +466,14 @@ class greedy_model : public std::ranges::view_interface<greedy_model> {
     m_pq.emplace(std::forward<Segments>(segments), r);
   }
 
+  [[nodiscard]] constexpr auto begin() {
+    return iterator(*this);
+  }
+
+  [[nodiscard]] constexpr auto end() {
+    return sentinel{};
+  }
+
   class sentinel {};
 
   class iterator {
@@ -478,13 +485,13 @@ class greedy_model : public std::ranges::view_interface<greedy_model> {
     using value_type = std::pair<point, double>;
     using difference_type = std::ptrdiff_t;
 
-    constexpr iterator() {}
+    constexpr iterator() = default;
 
-    constexpr iterator(greedy_model &p)
+    explicit constexpr iterator(greedy_model &p)
         : parent(&p) {}
 
     constexpr auto operator==(sentinel const &) const -> bool {
-      return parent == NULL || parent->m_pq.empty();
+      return parent == nullptr || parent->m_pq.empty();
     }
 
     auto operator*() const -> value_type {
@@ -505,6 +512,23 @@ class greedy_model : public std::ranges::view_interface<greedy_model> {
       return ++(*this);
     }
   };
+};
+
+class analytical_model : public std::ranges::view_interface<analytical_model> {
+ private:
+  double p;
+  double denom;
+  size_t denom_aux;
+  size_t denom_aux2;
+
+ public:
+  constexpr analytical_model(double d)
+      : p(std::pow(std::sin(std::numbers::pi_v<double> / 4.0), 2.0 / d))
+      , denom(1.0)
+      , denom_aux(0)
+      , denom_aux2(1) {
+    assert(d >= 1.0);
+  }
 
   [[nodiscard]] constexpr auto begin() {
     return iterator(*this);
@@ -513,11 +537,53 @@ class greedy_model : public std::ranges::view_interface<greedy_model> {
   [[nodiscard]] constexpr auto end() {
     return sentinel{};
   }
+
+  class sentinel {};
+
+  class iterator {
+   private:
+    analytical_model *parent = nullptr;
+    double value = 0.0;
+
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = double;
+    using difference_type = std::ptrdiff_t;
+
+    constexpr iterator() = default;
+
+    explicit constexpr iterator(analytical_model &p)
+        : parent(&p)
+        , value(parent->p * parent->p) {}
+
+    constexpr auto operator==(sentinel const &) const -> bool {
+      return parent == nullptr;
+    }
+
+    auto operator*() const -> value_type {
+      return value;
+    }
+
+    auto operator++() -> iterator & {
+      if (++(parent->denom_aux) == parent->denom_aux2) {
+        parent->denom *= 4.0;
+        parent->denom_aux = 0;
+        parent->denom_aux2 <<= 1;
+        value = (1.0 - parent->p) * parent->p / parent->denom;
+      }
+      return (*this);
+    }
+
+    auto operator++(int) -> iterator & {
+      return ++(*this);
+    }
+  };
 };
 
 }  // namespace apm::details
 
 namespace apm {
+using details::analytical_model;
 using details::exact_model;
 using details::greedy_model;
 using details::piecewise_segments;

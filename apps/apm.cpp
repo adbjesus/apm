@@ -4,7 +4,6 @@
 #include <iostream>
 #include <ranges>
 #include <string>
-#include <vector>
 
 int main(int argc, char **argv) {
   if (argc < 7) {
@@ -13,32 +12,25 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  int n = std::stoi(argv[1]);
-  int l = std::stoi(argv[2]);
-  double d = std::stod(argv[3]);
-  double r0 = std::stod(argv[4]);
-  double r1 = std::stod(argv[5]);
-  int greedy = std::stoi(argv[6]);
+  auto n = std::stoul(argv[1]);
+  auto l = std::stoul(argv[2]);
+  auto d = std::stod(argv[3]);
+  auto r = apm::point{std::stod(argv[4]), std::stod(argv[5])};
+  auto greedy = std::stoi(argv[6]);
 
-  // std::vector<std::pair<std::optional<apm::point<double>>, double>> result;
-  std::vector<double> result;
-  result.reserve(n);
   auto segments = apm::piecewise_segments(l, d);
 
+  std::cout << "hv,x,y\n";
   if (greedy == 0) {
-    auto model = apm::exact_model(std::move(segments), {r0, r1});
-    for (auto hv : model | std::ranges::views::take(n)) {
-      result.emplace_back(hv);
+    auto model = apm::exact_model(std::move(segments), r);
+    for (auto hv : std::ranges::views::take(model, n)) {
+      std::cout << hv << ",,\n";
     }
   } else {
-    auto model = apm::greedy_model(std::move(segments), {r0, r1});
-    for (auto [_, hv] : model | std::ranges::views::take(n)) {
-      result.emplace_back(hv);
+    auto model = apm::greedy_model(std::move(segments), r);
+    for (auto [point, hv] : std::ranges::views::take(model, n)) {
+      std::cout << hv << "," << point.x << "," << point.y << "\n";
     }
-  }
-
-  for (auto const &hv : result) {
-    std::cout << hv << "\n";
   }
 
   return 0;
