@@ -9,7 +9,7 @@ endif()
 project(
   APM
   VERSION 0.1.0
-  DESCRIPTION "Multi-Objective Optimization Utilities."
+  DESCRIPTION "Anytime Performance Model for bi-objective optimization algorithms."
   LANGUAGES CXX
 )
 
