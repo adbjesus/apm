@@ -1,0 +1,36 @@
+name: CMake
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Prepare environment
+      run: sudo apt-get install -y ninja-build catch2 doxygen libbenchmark-dev
+
+    - name: Configure CMake
+      run: |
+        cmake -B ${{github.workspace}}/build \
+              -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+              -DAPM_BUILD_TESTS=ON \
+              -DAPM_BUILD_BENCHMARKS=ON \
+              -DAPM_ENABLE_WARNINGS=ON \
+              -DAPM_ENABLE_WERROR=ON \
+              -G Ninja
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build
+
+    - name: Test
+      run: cmake --build ${{github.workspace}}/build --target test
