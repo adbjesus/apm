@@ -1,9 +1,13 @@
 {
-  description = "apm";
-
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
+
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, flake-utils }:
@@ -14,11 +18,22 @@
           pname = "apm";
           version = "0.1.0";
           src = self;
+
+          meta = with nixpkgs.lib; {
+            description = "Anytime Performance Model";
+            license = licenses.mit;
+          };
+
           # Build dependencies
-          nativeBuildInputs = with pkgs; [ cmake ninja doxygen ];
-          # Run-time dependencies
-          buildInputs = with pkgs; [ gbenchmark catch2 ];
+          nativeBuildInputs = with pkgs; [
+            cmake
+            ninja
+            doxygen
+            catch2
+            gbenchmark
+          ];
         };
-        defaultPackage = self.packages.${system}.apm;
+
+        packages.default = self.packages.${system}.apm;
       });
 }
