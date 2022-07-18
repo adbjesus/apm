@@ -14,13 +14,12 @@ project(
 )
 
 # Project options
-option(APM_DEVELOPMENT_BUILD "Development build" OFF)
 option(APM_BUILD_APPS "Build the apps" ${APM_MASTER_PROJECT})
 option(APM_BUILD_DOCS "Build the documentation" ${APM_MASTER_PROJECT})
-option(APM_BUILD_TESTS "Build tests" ${APM_DEVELOPMENT_BUILD})
-option(APM_BUILD_BENCHMARKS "Build benchmarks" ${APM_DEVELOPMENT_BUILD})
-option(APM_ENABLE_WARNINGS "Enable warnings" ${APM_DEVELOPMENT_BUILD})
-option(APM_ENABLE_WERROR "Enable -Werror or /WX" ${APM_DEVELOPMENT_BUILD})
+option(APM_BUILD_TESTS "Build tests" OFF)
+option(APM_BUILD_BENCHMARKS "Build benchmarks" OFF)
+option(APM_ENABLE_WARNINGS "Enable warnings" OFF)
+option(APM_ENABLE_WERROR "Enable -Werror or /WX" OFF)
 
 # Warning flags
 set(APM_CXX_WARN_FLAGS "")
