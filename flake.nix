@@ -16,7 +16,7 @@
       in rec {
         packages.apm = pkgs.stdenv.mkDerivation {
           pname = "apm";
-          version = "0.1.0";
+          version = "0.1.1";
           src = self;
 
           meta = with nixpkgs.lib; {
